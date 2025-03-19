@@ -1,0 +1,55 @@
+{
+    "name": "temant/backup-manager",
+    "description": "Secure and efficient PHP backup utility for mysql databases.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "backup",
+        "mysql",
+        "database", 
+        "security",
+        "php",
+        "utility",
+        "manager" 
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Temant\\BackupManager\\": "Src/"
+        }
+    }, 
+    "authors": [
+        {
+            "name": "Emad Almahdi",
+            "email": "emad@almahdi.se"
+        }
+    ],
+    "scripts": {
+        "phpstan": "./vendor/bin/phpstan analyse",
+        "phpunit": "./vendor/bin/phpunit",
+        "check-all": [
+            "@phpstan",
+            "@phpunit"
+        ]
+    },
+    "scripts-descriptions": {
+        "phpstan": "Run PHPStan for static analysis",
+        "phpunit": "Run PHPUnit tests"
+    },
+    "scripts-aliases": {
+        "phpstan": [
+            "stan",
+            "analyze",
+            "analyse"
+        ],
+        "phpunit": [
+            "test"
+        ]
+    }
+}

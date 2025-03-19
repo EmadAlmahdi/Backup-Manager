@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit cacheDirectory="Tests/Cache" bootstrap="vendor/autoload.php" colors="true"
+  stopOnFailure="false">
+
+  <testsuites>
+    <testsuite name="Backup Manager">
+      <directory>Tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <coverage>
+    <report>
+      <clover outputFile="Tests/Coverage/Clover.xml" />
+      <html outputDirectory="Tests/Coverage/Html" />
+    </report>
+  </coverage>
+
+  <source>
+    <include>
+      <directory suffix=".php">./Src</directory>
+    </include>
+  </source>
+
+</phpunit> 
