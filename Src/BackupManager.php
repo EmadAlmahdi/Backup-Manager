@@ -2,8 +2,11 @@
 
 namespace Temant\BackupManager;
 
+use PDO;
+use PDOException;
 use RuntimeException;
 use Temant\BackupManager\Enum\CleanupStrategyEnum;
+use Temant\BackupManager\Exceptions\ConnectionErrorException;
 use Temant\BackupManager\Factory\CleanupStrategyFactory;
 use Temant\BackupManager\Interface\CleanupStrategyInterface;
 
@@ -67,10 +70,14 @@ final readonly class BackupManager
      *                                   - `'--extended-insert'`     (Uses multiple rows per INSERT statement for efficiency)
      *                                   - `'--no-data'`             (Dumps only the structure, no data)
      *
+     * @throws ConnectionErrorException If the connection to the database fails.
+     * 
      * @return bool True on success, false on failure.
      */
     public function backup(string $username, string $password, string $database, array $options = []): bool
     {
+        $this->testCredentials($username, $password, $database);
+
         $backupFile = sprintf('%s/%s__%s.sql', rtrim($this->storagePath, '/'), $database, date('Y-m-d_H-i-s'));
         $command = $this->buildMysqldumpCommand($username, $password, $database, $backupFile, $options);
 
@@ -84,6 +91,30 @@ final readonly class BackupManager
     }
 
     /**
+     * Tests the provided MySQL credentials.
+     *
+     * This method attempts to connect to the MySQL database using the provided credentials.
+     * If the connection fails, an exception is thrown.
+     *
+     * @param string $username MySQL username.
+     * @param string $password MySQL password.
+     * @param string $database Name of the database to test the connection against.
+     * 
+     * @throws ConnectionErrorException If the connection fails.
+     * 
+     * @return void
+     */
+    private function testCredentials(string $username, string $password, string $database): void
+    {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=$database", $username, $password);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            throw new ConnectionErrorException($e->getMessage());
+        }
+    }
+
+    /**
      * Ensures that the specified directory exists, creating it if necessary.
      *
      * This method checks if the storage directory exists and attempts to create it
@@ -93,7 +124,7 @@ final readonly class BackupManager
      * @return void
      */
     private function ensureDirectoryExists(string $path): void
-    {        
+    {
         if (!is_dir($path) && !mkdir($path, 0777, true) && !is_dir($path)) {
             throw new RuntimeException("Failed to create backup directory: {$path}");
         }
