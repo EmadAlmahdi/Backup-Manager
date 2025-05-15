@@ -2,11 +2,11 @@
 
 namespace Temant\BackupManager\Factory;
 
-use RuntimeException;
 use Temant\BackupManager\CleanupStrategy\MaxDaysCleanup;
 use Temant\BackupManager\CleanupStrategy\MaxFilesCleanup;
 use Temant\BackupManager\CleanupStrategy\MaxSizeCleanup;
 use Temant\BackupManager\Enum\CleanupStrategyEnum;
+use Temant\BackupManager\Exceptions\BackupException;
 use Temant\BackupManager\Interface\CleanupStrategyInterface;
 
 final class CleanupStrategyFactory
@@ -22,11 +22,11 @@ final class CleanupStrategyFactory
     public static function create(?CleanupStrategyEnum $cleanupStrategyType = null, ?int $variable = null): ?CleanupStrategyInterface
     {
         if (isset($cleanupStrategyType) && $variable === null) {
-            throw new RuntimeException("Variable is required for cleanup strategy type {$cleanupStrategyType->name}.");
+            throw new BackupException("Variable is required for cleanup strategy type {$cleanupStrategyType->name}.");
         }
 
         if (!isset($cleanupStrategyType) && $variable !== null) {
-            throw new RuntimeException("Please provide a valid cleanup strategy type.");
+            throw new BackupException("Please provide a valid cleanup strategy type.");
         }
 
         return match ($cleanupStrategyType) {

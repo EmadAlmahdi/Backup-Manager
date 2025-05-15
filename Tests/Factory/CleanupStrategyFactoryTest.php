@@ -6,6 +6,7 @@ use Temant\BackupManager\CleanupStrategy\MaxDaysCleanup;
 use Temant\BackupManager\CleanupStrategy\MaxFilesCleanup;
 use Temant\BackupManager\CleanupStrategy\MaxSizeCleanup;
 use Temant\BackupManager\Enum\CleanupStrategyEnum;
+use Temant\BackupManager\Exceptions\BackupException;
 use Temant\BackupManager\Factory\CleanupStrategyFactory;
 
 final class CleanupStrategyFactoryTest extends TestCase
@@ -27,7 +28,7 @@ final class CleanupStrategyFactoryTest extends TestCase
     public function testFailureCreate(?CleanupStrategyEnum $startegy, ?int $variable, string $message): void
     {
         $this->expectExceptionMessage($message);
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BackupException::class);
 
         CleanupStrategyFactory::create($startegy, $variable);
     }

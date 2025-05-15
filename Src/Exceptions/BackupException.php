@@ -5,10 +5,10 @@ namespace Temant\BackupManager\Exceptions;
 use Exception;
 use Throwable;
 
-class ConnectionErrorException extends Exception implements Throwable
+class BackupException extends Exception implements Throwable
 {
     public function __construct(
-        string $message = 'Connection error',
+        string $message,
         int $code = 0,
         ?Throwable $previous = null
     ) {

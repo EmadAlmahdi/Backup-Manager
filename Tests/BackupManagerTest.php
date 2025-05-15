@@ -3,8 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Temant\BackupManager\BackupManager;
 use Temant\BackupManager\Enum\CleanupStrategyEnum;
-use RuntimeException;
-use Temant\BackupManager\Exceptions\ConnectionErrorException;
+use Temant\BackupManager\Exceptions\BackupException;
 
 class BackupManagerTest extends TestCase
 {
@@ -23,7 +22,7 @@ class BackupManagerTest extends TestCase
 
     public function testBackupManagerFailedConstruct(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(BackupException::class);
         new BackupManager(
             "some:path:that:is:invalid?",
             CleanupStrategyEnum::MAX_FILES_BASED,
@@ -39,18 +38,18 @@ class BackupManagerTest extends TestCase
             5
         );
 
-        $result = $backupManager->backup(
+        $backupPath = $backupManager->backup(
             "intradb",
             "Proto!728agt22Ws",
             "intradb"
         );
 
-        $this->assertTrue($result);
+        $this->assertStringContainsString($this->storagePath, $backupPath);
     }
 
     public function testBackupManagerFailedBackup(): void
     {
-        $this->expectException(ConnectionErrorException::class);
+        $this->expectException(BackupException::class);
 
         $backupManager = new BackupManager(
             $this->storagePath,
@@ -62,6 +61,6 @@ class BackupManagerTest extends TestCase
             "intradb",
             "SIMULATE ERROR PASSOWRD FOR TESTING",
             "intradb"
-        ); 
+        );
     }
 }
