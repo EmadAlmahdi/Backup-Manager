@@ -34,11 +34,11 @@ final readonly class BackupManager
      */
     public function __construct(
         private string $storagePath,
-        private ?CleanupStrategyEnum $cleanupStrategyType = null,
-        private ?int $variable = null
+        ?CleanupStrategyEnum $cleanupStrategyType = null,
+        ?int $variable = null
     ) {
         $this->ensureDirectoryExists($this->storagePath);
-        $this->cleanupStrategy = CleanupStrategyFactory::create($this->cleanupStrategyType, $this->variable);
+        $this->cleanupStrategy = CleanupStrategyFactory::create($cleanupStrategyType, $variable);
     }
 
     /**
@@ -121,6 +121,7 @@ final readonly class BackupManager
      * if it does not. If the directory creation fails, a RuntimeException is thrown.
      *
      * @param string $path The path of the directory to check.
+     * 
      * @return void
      */
     private function ensureDirectoryExists(string $path): void
@@ -141,6 +142,7 @@ final readonly class BackupManager
      * @param string $database Name of the database.
      * @param string $backupFile Path to the backup file.
      * @param array<int, string> $options Optional mysqldump options.
+     * 
      * @return string The mysqldump command string.
      */
     private function buildMysqldumpCommand(string $username, string $password, string $database, string $backupFile, array $options = []): string
@@ -166,6 +168,7 @@ final readonly class BackupManager
      * This method runs a shell command and returns whether it was successful or not.
      *
      * @param string $command The command to execute.
+     * 
      * @return bool Returns true if the command was successful, false otherwise.
      */
     private function executeCommand(string $command): bool
